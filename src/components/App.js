@@ -8,11 +8,14 @@ import Typeahead from './Typeahead';
 
 const Wrapper = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
   width: 100vw;
-  height: 100px;
+  height: 100vh;
 `
+
+function handleSelect(suggestion) {
+  window.alert(suggestion)
+}
 
 const App = (props) => {
   return (
@@ -21,9 +24,7 @@ const App = (props) => {
       <Wrapper>
         <Typeahead
           suggestions={data.books}
-          handleSelect={(suggestion) => {
-            window.alert(suggestion)
-          }}
+          handleSelect={handleSelect}
         />
       </Wrapper>
     </>

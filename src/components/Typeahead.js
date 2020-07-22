@@ -79,30 +79,31 @@ function Typeahead({ suggestions, handleSelect }) {
 
   return (
     <Wrapper>
-     <div>
-       <Input
-       type="text"
-       value={input}
-       onChange={handleChange}
-       onKeyDown={handleSubmit}
-       />
+      <div>
+         <Input
+           type="text"
+           value={input}
+           onChange={handleChange}
+           onKeyDown={handleSubmit}
+         />
 
-       <Button onClick={() => setInput('')}>Clear</Button>
-     </div>
+         <Button onClick={() => setInput('')}>Clear</Button>
+      </div>
 
-      <Suggestions>
-        {console.log(results)}
-        {results.map(book => {
-          return (
-            <Suggestion
-              key={book.id}
-              onClick={() => handleSelect(book.title)}
-            >
-              {book.title}
-            </Suggestion>
-          )
-        })}
-      </Suggestions>
+      {results.length > 0 && (
+        <Suggestions>
+          {results.map(book => {
+            return (
+              <Suggestion
+                key={book.id}
+                onClick={() => handleSelect(book.title)}
+              >
+                {book.title}
+              </Suggestion>
+            )
+          })}
+        </Suggestions>
+      )}
     </Wrapper>
   )
 }

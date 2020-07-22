@@ -37,8 +37,8 @@ const Suggestions = styled.ul`
   flex-direction: column;
   max-width: 270px;
   max-height: 100px;
-  margin-top: 5px;
   min-height: 50vh;
+  margin-top: 5px;
   box-shadow: 3px 3px 10px 2px lightgray;
   overflow-y: scroll;
 `;
@@ -56,14 +56,38 @@ const Suggestion = styled.li`
   }
 `;
 
-function Typeahead({ suggestions, handleSelect }) {
+const Bold = styled.span`
+  font-weight: bold;
+`;
+
+const Italic = styled.span`
+  font-style: italic;
+  font-size: 14px;
+`
+
+const PurpleItalics = styled(Italic)`
+  color: purple;
+`
+
+function Typeahead({ categories, suggestions, handleSelect }) {
   const [input, setInput] = React.useState('');
 
   let results = [];
 
   if (input.length >= 2) {
     results = suggestions.filter(suggestion => {
-      return suggestion.title.toLowerCase().includes(input);
+      const suggestionTitle = suggestion.title.toLowerCase();
+
+      if (suggestionTitle.includes(input)) {
+        const titleComponents = {
+          matched: input,
+          remaining: suggestionTitle.replace(input, '')
+        }
+        suggestion.titleComponents = titleComponents;
+
+        return suggestion;
+      }
+      else return false;
     });
   }
 
@@ -89,7 +113,6 @@ function Typeahead({ suggestions, handleSelect }) {
 
          <Button onClick={() => setInput('')}>Clear</Button>
       </div>
-
       {results.length > 0 && (
         <Suggestions>
           {results.map(book => {
@@ -97,8 +120,12 @@ function Typeahead({ suggestions, handleSelect }) {
               <Suggestion
                 key={book.id}
                 onClick={() => handleSelect(book.title)}
+                resultsLength={results.length}
               >
-                {book.title}
+                <span>{book.titleComponents.matched}</span>
+                <Bold>{book.titleComponents.remaining}</Bold>
+                <Italic> in </Italic>
+                <PurpleItalics>{categories[book.categoryId].name}</PurpleItalics>
               </Suggestion>
             )
           })}

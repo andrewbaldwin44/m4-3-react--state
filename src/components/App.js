@@ -25,6 +25,7 @@ const App = (props) => {
         <Typeahead
           suggestions={data.books}
           handleSelect={handleSelect}
+          categories={data.categories}
         />
       </Wrapper>
     </>

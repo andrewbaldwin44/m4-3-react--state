@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import Suggestions from './Suggestions';
+
 const Wrapper = styled.div`
   position: fixed;
   margin-top: 100px;
@@ -30,52 +32,13 @@ const Button = styled.button`
   border-radius: 4px;
 `;
 
-const Suggestions = styled.ul`
-  position: fixed;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  max-width: 270px;
-  max-height: 100px;
-  min-height: 50vh;
-  margin-top: 5px;
-  box-shadow: 3px 3px 10px 2px lightgray;
-  overflow-y: scroll;
-`;
-
-const Suggestion = styled.li`
-  display: inline-block;
-  line-height: 1.2;
-  width: 100%;
-  height: 100%;
-  padding: 10px 20px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f06292;
-  }
-`;
-
-const Bold = styled.span`
-  font-weight: bold;
-`;
-
-const Italic = styled.span`
-  font-style: italic;
-  font-size: 14px;
-`
-
-const PurpleItalics = styled(Italic)`
-  color: purple;
-`
-
 function Typeahead({ categories, suggestions, handleSelect }) {
   const [input, setInput] = React.useState('');
 
-  let results = [];
+  let matchedBooks = [];
 
   if (input.length >= 2) {
-    results = suggestions.filter(suggestion => {
+    matchedBooks = suggestions.filter(suggestion => {
       const suggestionTitle = suggestion.title.toLowerCase();
 
       if (suggestionTitle.includes(input)) {
@@ -113,23 +76,13 @@ function Typeahead({ categories, suggestions, handleSelect }) {
 
          <Button onClick={() => setInput('')}>Clear</Button>
       </div>
-      {results.length > 0 && (
-        <Suggestions>
-          {results.map(book => {
-            return (
-              <Suggestion
-                key={book.id}
-                onClick={() => handleSelect(book.title)}
-                resultsLength={results.length}
-              >
-                <span>{book.titleComponents.matched}</span>
-                <Bold>{book.titleComponents.remaining}</Bold>
-                <Italic> in </Italic>
-                <PurpleItalics>{categories[book.categoryId].name}</PurpleItalics>
-              </Suggestion>
-            )
-          })}
-        </Suggestions>
+      
+      {matchedBooks.length > 0 && (
+        <Suggestions
+          matchedBooks={matchedBooks}
+          handleSelect={handleSelect}
+          categories={categories}
+        />
       )}
     </Wrapper>
   )

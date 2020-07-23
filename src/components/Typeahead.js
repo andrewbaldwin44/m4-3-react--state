@@ -34,6 +34,7 @@ const Button = styled.button`
 
 function Typeahead({ categories, suggestions, handleSelect }) {
   const [input, setInput] = React.useState('');
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = React.useState(0);
 
   let matchedBooks = [];
 
@@ -60,8 +61,18 @@ function Typeahead({ categories, suggestions, handleSelect }) {
     setInput(inputValue);
   }
 
-  const handleSubmit = e => {
-    if (e.key === 'Enter') handleSelect(e.target.value);
+  const handleKeyPress = e => {
+    switch (e.key) {
+      case "Enter":
+        handleSelect(matchedBooks[selectedSuggestionIndex].title);
+        break;
+      case "ArrowUp":
+        setSelectedSuggestionIndex(selectedSuggestionIndex - 1);
+        break;
+      case "ArrowDown":
+        setSelectedSuggestionIndex(selectedSuggestionIndex + 1);
+        break;
+    }
   }
 
   return (
@@ -71,17 +82,19 @@ function Typeahead({ categories, suggestions, handleSelect }) {
            type="text"
            value={input}
            onChange={handleChange}
-           onKeyDown={handleSubmit}
+           onKeyDown={handleKeyPress}
          />
 
          <Button onClick={() => setInput('')}>Clear</Button>
       </div>
-      
+
       {matchedBooks.length > 0 && (
         <Suggestions
           matchedBooks={matchedBooks}
           handleSelect={handleSelect}
           categories={categories}
+          selectedSuggestionIndex={selectedSuggestionIndex}
+          setSelectedSuggestionIndex={setSelectedSuggestionIndex}
         />
       )}
     </Wrapper>

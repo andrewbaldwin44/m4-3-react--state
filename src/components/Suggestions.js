@@ -21,10 +21,7 @@ const SuggestionItem = styled.li`
   height: 100%;
   padding: 10px 20px;
   cursor: pointer;
-
-  &:hover {
-    background-color: #f06292;
-  }
+  background-color: ${props => props.isSelected ? '#f06292' : 'transparent'};
 `;
 
 const Bold = styled.span`
@@ -40,14 +37,19 @@ const PurpleItalics = styled(Italic)`
   color: purple;
 `;
 
-function Suggestions({matchedBooks, handleSelect, categories}) {
+function Suggestions({matchedBooks, handleSelect, categories,
+                      selectedSuggestionIndex, setSelectedSuggestionIndex}) {
   return (
     <SuggestionList>
-      {matchedBooks.map(book => {
+      {matchedBooks.map((book, index) => {
+        const isSelected = index === selectedSuggestionIndex;
+
         return (
           <SuggestionItem
             key={book.id}
             onClick={() => handleSelect(book.title)}
+            onMouseEnter={() => setSelectedSuggestionIndex(index)}
+            isSelected={isSelected}
           >
             <span>{book.titleComponents.matched}</span>
             <Bold>{book.titleComponents.remaining}</Bold>
